@@ -4,6 +4,24 @@ plugins {
     id("maven-publish")
 }
 
+// Gitタグからバージョンを取得する関数
+fun getVersionFromTag(): String {
+    return try {
+        val tag = ProcessBuilder("git", "describe", "--tags", "--abbrev=0")
+            .redirectOutput(ProcessBuilder.Redirect.PIPE)
+            .start()
+            .inputStream
+            .bufferedReader()
+            .readText()
+            .trim()
+            .removePrefix("v")
+
+        if (tag.isNotEmpty()) tag else "0.0.1-SNAPSHOT"
+    } catch (e: Exception) {
+        "0.0.1-SNAPSHOT"
+    }
+}
+
 android {
     namespace = "com.segnities007.mvi"
     compileSdk = 36
@@ -59,7 +77,34 @@ afterEvaluate {
 
                 groupId = "com.github.segnities007"
                 artifactId = "mvi"
-                version = "1.0.0"
+                version = getVersionFromTag()  // Gitタグから自動取得
+
+                // POM情報（JitPackで表示される）
+                pom {
+                    name.set("MVI Library")
+                    description.set("A Model-View-Intent library for Android")
+                    url.set("https://github.com/segnities007/mvi")
+
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id.set("segnities007")
+                            name.set("Segnities")
+                        }
+                    }
+
+                    scm {
+                        connection.set("scm:git:github.com/segnities007/mvi.git")
+                        developerConnection.set("scm:git:ssh://github.com/segnities007/mvi.git")
+                        url.set("https://github.com/segnities007/mvi/tree/main")
+                    }
+                }
             }
         }
     }
