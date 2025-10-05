@@ -16,7 +16,7 @@ fun getVersionFromTag(): String {
             .trim()
             .removePrefix("v")
 
-        if (tag.isNotEmpty()) tag else "0.0.1-SNAPSHOT"
+        tag.ifEmpty { "0.0.1-SNAPSHOT" }
     } catch (e: Exception) {
         "0.0.1-SNAPSHOT"
     }
@@ -28,8 +28,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 36
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
