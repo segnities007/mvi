@@ -34,6 +34,13 @@ abstract class BaseViewModel<State : UiState, Intent : UiIntent, Effect : UiEffe
     abstract fun onIntent(intent: Intent)
 
     /**
+     * Stateを更新する
+     */
+    protected  fun setState(newState: State) {
+        _uiState.value = newState
+    }
+
+    /**
      * 一度きりのEffectを送信する
      */
     protected fun sendEffect(effect: Effect) {
